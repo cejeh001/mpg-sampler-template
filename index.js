@@ -88,10 +88,10 @@ function setup() {
     click = new StepSeqTrack(
         'click',
         [
-            1, 1, 1, 1,         // Beat 1
-            1, 1, 1, 1,         // Beat 2
-            1, 1, 1, 1,         // Beat 3
-            1, 1, 1, 1          // Beat 4
+            1, 0, 1, 0,         // Beat 1
+            0, 1, 0, 1,         // Beat 2
+            1, 0, 1, 1,         // Beat 3
+            0, 1, 0, 1          // Beat 4
         ],
         buttons[0]
     );
@@ -161,6 +161,17 @@ function ampToDb(amp, dBRange=-30) {
     return map(amp, 0, 1, dBRange, 0);
 }
 
+// draw playhead
+function drawPlayhead() {
+    // Calculate the x position of the playhead based on the current step.
+    let playheadX = map(playhead, 0, numSteps, 100, width - 100);
+
+    // Draw a line to represent the playhead.
+    stroke(255);
+    strokeWeight(2);
+    line(playheadX, 100, playheadX, height - 100);
+}
+
 
 // -----------------------------------------------------------------------------
 // Draw
@@ -190,6 +201,7 @@ function draw() {
     text('MPG', 10, 80);
 
     // Visualise playback position.
+    drawPlayhead();
 
     for (let i = 0; i < buttons.length; i++) {
         buttons[i].draw();
@@ -199,7 +211,6 @@ function draw() {
         sliders[i].draw();
     }
 }
-
 
 // -----------------------------------------------------------------------------
 // Slider callback functions
