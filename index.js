@@ -43,6 +43,7 @@ let playhead = -1;
 
 // Track variables.
 let click;
+let beep;
 
 // -----------------------------------------------------------------------------
 // Setup
@@ -79,6 +80,16 @@ function setup() {
 
 
     // Step sequencer tracks.
+    beep = new StepSeqTrack(
+        'click',
+        [
+            0,0,0,0,
+            1,1,1,1,
+            0,0,0,0,
+            1,1,1,1,
+        ],
+        buttons[1]
+    );
 
     // Each track contains a pattern array, which by default contains 16 values
     // between 0 and 1. These values are used to create different rhythmic
