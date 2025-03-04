@@ -84,9 +84,9 @@ function setup() {
         'click',
         [
             0,0,0,0,
-            1,1,1,1,
+            1,1,1,0,
             0,0,0,0,
-            1,1,1,1,
+            1,0,1,1,
         ],
         buttons[1]
     );
@@ -134,6 +134,9 @@ async function startAudio() {
     click.player = new Tone.Player('assets/click.mp3');
     click.player.toDestination();
 
+    beep.player = new Tone.Player('assets/beep.mp3');
+    beep.player.toDestination();
+
 
     // Wait until all samples are loaded.
     await Tone.loaded();
@@ -161,6 +164,13 @@ function playNextStep(time) {
         }
     }
 
+    if (beep.isPlaying) {
+        if (beep.pattern[playhead] > 0) {
+            // Trigger sound at precise time.
+            beep.player.start(time);
+        }
+
+    }
 }
 
 function ampToDb(amp, dBRange=-30) {
