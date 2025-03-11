@@ -40,10 +40,13 @@ let playhead = -1;
 // Global effects.
 
 // Main output volume control.
+let mainOut;
 
 // Track variables.
 let click;
 let beep;
+let croak;
+let hat;
 
 // -----------------------------------------------------------------------------
 // Setup
@@ -81,7 +84,7 @@ function setup() {
 
     // Step sequencer tracks.
     beep = new StepSeqTrack(
-        'click',
+        'beep',
         [
             0,0,0,0,
             1,1,1,0,
@@ -107,6 +110,30 @@ function setup() {
         buttons[0]
     );
 
+    croak = new StepSeqTrack(
+        'croak', 
+        [
+            1,1,1,1,
+            1,1,1,1,
+            1,1,1,1,
+            1,1,1,1,
+        ], 
+        buttons[2]
+    );
+
+    // hihat.
+    beep = new StepSeqTrack(
+        'hihat',
+        [
+            1,1,1,0,
+            1,0,1,1,
+            1,0,1,0,
+            1,1,1,0,
+        ],
+        buttons[3]
+    );
+
+
 }
 
 async function startAudio() {
@@ -120,7 +147,8 @@ async function startAudio() {
     console.log('Audio has started.');
 
     // Create our own sequencer.
-
+    mainOut = new Tone.Volume(0);
+    mainOut.toDestination();
     // We will use this clock, which runs in the audio thread, as a
     // very accurate metronome. It will call the `playNextStep()`
     // function at regular intervals (specified in Hz) passing the
@@ -132,10 +160,20 @@ async function startAudio() {
 
     // Create audio sample players and load audio samples.
     click.player = new Tone.Player('assets/click.mp3');
-    click.player.toDestination();
+    // click.player.toDestination();
 
     beep.player = new Tone.Player('assets/beep.mp3');
-    beep.player.toDestination();
+    // beep.player.toDestination();
+
+    croak.player = new Tone.Player('assets/croak.mp3');
+    // croak.player.toDestination();
+
+    hat.player = new Tone.Player('assets/hihat.mp3');
+
+    click.player.connect(mainOut);
+    beep.player.connect(mainOut);
+    croak.player.connect(mainOut);
+    hat.player.connect(mainOut);
 
 
     // Wait until all samples are loaded.
@@ -145,6 +183,9 @@ async function startAudio() {
     // Update audio context variables.
     audioInitialised = true;
     audioStarting = false;
+
+    // setMainVolume(mainOut.volume.value);
+    ampToDb()
 }
 
 function playNextStep(time) {
@@ -170,6 +211,12 @@ function playNextStep(time) {
             beep.player.start(time);
         }
 
+    }
+
+    if (croak.isPlaying) {
+        if (beep.pattern[playhead] > 0) {
+            croak.player.start(time);
+        }
     }
 }
 
@@ -239,6 +286,7 @@ function draw() {
 
 function setMainVolume() {
     console.log(sliders[0].value);
+    Volume = mainOut.volume.value;
 }
 
 
