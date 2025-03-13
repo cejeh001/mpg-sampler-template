@@ -47,6 +47,10 @@ let click;
 let beep;
 let croak;
 let hat;
+let gameCharacter;
+let gameStart;
+let gun;
+let xylophone;
 
 // -----------------------------------------------------------------------------
 // Setup
@@ -122,7 +126,7 @@ function setup() {
     );
 
     // hihat.
-    beep = new StepSeqTrack(
+    hat = new StepSeqTrack(
         'hihat',
         [
             1,1,1,0,
@@ -131,6 +135,54 @@ function setup() {
             1,1,1,0,
         ],
         buttons[3]
+    );
+
+    // game character
+    gameCharacter = new StepSeqTrack(
+        'gameCharacter',
+        [
+            1,0,1,0,
+            1,0,0,1,
+            1,0,1,0,
+            1,0,1,0,
+        ],
+        buttons[4]
+    );
+
+    // game start
+    gameStart = new StepSeqTrack(
+        'gameStart',
+        [
+            1,0,0,0,
+            1,0,0,0,
+            1,0,0,0,
+            1,0,1,0,
+        ],
+        buttons[5]
+    );
+
+    // xylophone.
+    xylophone = new StepSeqTrack(
+        'xylophone',
+        [
+            1,0,1,0,
+            1,0,0,1,
+            1,0,1,0,
+            0,1,0,0,
+        ],
+        buttons[6]
+    );
+
+    // gun.
+    gun = new StepSeqTrack(
+        'gun',
+        [
+            1,0,1,0,
+            1,0,0,1,
+            1,0,1,0,
+            0,1,0,0,
+        ],
+        buttons[7]
     );
 
 
@@ -170,10 +222,21 @@ async function startAudio() {
 
     hat.player = new Tone.Player('assets/hihat.mp3');
 
+    gameCharacter.player = new Tone.Player('assets/gameCharacter.mp3');
+    gameStart.player = new Tone.Player('assets/game start.mp3');
+    xylophone.player = new Tone.Player('assets/xylophone.mp3');
+    gun.player = new Tone.Player('assets/gun.mp3');
+
+
+
     click.player.connect(mainOut);
     beep.player.connect(mainOut);
     croak.player.connect(mainOut);
     hat.player.connect(mainOut);
+    gameCharacter.player.connect(mainOut);
+    gameStart.player.connect(mainOut);
+    xylophone.player.connect(mainOut);
+    gun.player.connect(mainOut);
 
 
     // Wait until all samples are loaded.
@@ -216,6 +279,30 @@ function playNextStep(time) {
     if (croak.isPlaying) {
         if (beep.pattern[playhead] > 0) {
             croak.player.start(time);
+        }
+    }
+
+    if (gameCharacter.isPlaying) {
+        if (gameCharacter.pattern[playhead] > 0) {
+            gameCharacter.player.start(time);
+        }
+    }
+
+    if (gameStart.isPlaying) {
+        if (gameStart.pattern[playhead] > 0) {
+            gameStart.player.start(time);
+        }
+    }
+    
+    if (xylophone.isPlaying) {
+        if (xylophone.pattern[playhead] > 0) {
+            xylophone.player.start(time);
+        }
+    }
+
+    if (gun.isPlaying) {
+        if (gun.pattern[playhead] > 0) {
+            gun.player.start(time);
         }
     }
 }
